@@ -1,6 +1,6 @@
 ================================================================================
                     WEDDING CELEBRATION DETAILS & ITINERARY
-               प्रियंका यादव एवं अमित यादव — वैवाहिक मांगलिक विवरण
+               अमित यादव एवं प्रियंका यादव — वैवाहिक मांगलिक विवरण
 ================================================================================
 
 ॥ ॐ श्री गणेशाय नमः ॥
@@ -14,6 +14,12 @@
 1. COUPLE INFORMATION (वर-वधू परिचय)
 --------------------------------------------------------------------------------
 
+GROOM (वर):
+  • Name: चि० अमित यादव (Chi. Amit Yadav)
+  • Parents (माता-पिता): श्रीमती जानकी यादव व स्व० बजरंग यादव (Smt. Janki Yadav & Late Shri Bajrang Yadav)
+  • Grandparents (दादा-दादी): स्व० मरहू यादव एवं स्व० बृजलाल यादव (Late Shri Marhu Yadav & Late Shri Brijlal Yadav)
+  • Residence (निवास): 358/195, बिहारीपुर, सआदतगंज, लखनऊ, उत्तर प्रदेश
+
 BRIDE (कन्या):
   • Name: आयु० प्रियंका यादव (Ayu. Priyanka Yadav)
   • Parents (माता-पिता): श्रीमती विमला यादव व श्री शिवराम यादव (Smt. Vimla Yadav & Shri Shivram Yadav)
@@ -21,22 +27,20 @@ BRIDE (कन्या):
   • Residence (निवास): 33-सी, जय विहार कॉलोनी, लेन-2, इन्दिरा नगर, लखनऊ, उत्तर प्रदेश
   • Contact Numbers (मो०): 9415837514, 9044802050
 
-GROOM (वर):
-  • Name: चि० अमित यादव (Chi. Amit Yadav)
-  • Parents (माता-पिता): श्रीमती जानकी यादव व स्व० बजरंग यादव (Smt. Janki Yadav & Late Shri Bajrang Yadav)
-  • Grandparents (दादा-दादी): स्व० मरहू यादव एवं स्व० बृजलाल यादव (Late Shri Marhu Yadav & Late Shri Brijlal Yadav)
-  • Residence (निवास): 358/195, बिहारीपुर, सआदतगंज, लखनऊ, उत्तर प्रदेश
-
 --------------------------------------------------------------------------------
-2. WEDDING DATE & MAIN VENUE (विवाह तिथि एवं मुख्य स्थल)
+2. WEDDING DATE & MAIN VENUES (विवाह तिथि एवं मुख्य स्थल)
 --------------------------------------------------------------------------------
 
   • Main Wedding Date: शुक्रवार, 04 दिसम्बर 2026 (Friday, 04 December 2026)
-  • Wedding Venue (वैवाहिक स्थल):
+  
+  • Wedding Venue (विवाह स्थल):
       ^^ चौधरी गार्डेन मैरिज लॉन ** (Chaudhary Garden Marriage Lawn)
       श्रद्धा नगर, सेक्टर-1, गोमती नगर, लखनऊ (Shraddha Nagar, Sector-1, Gomti Nagar, Lucknow)
-  • Google Maps Location:
-      https://www.google.com/maps/search/?api=1&query=Chaudhary+Garden+Marriage+Lawn+Shraddha+Nagar+Sector+1+Gomti+Nagar+Lucknow
+      Google Maps: https://www.google.com/maps/search/?api=1&query=Chaudhary+Garden+Marriage+Lawn+Shraddha+Nagar+Sector+1+Gomti+Nagar+Lucknow
+
+  • Reception Venue (शुभ आशीर्वाद समारोह स्थल):
+      मेहता लॉन (Mehta Lawn)
+      सरफराजगंज, बालागंज, हरदोई रोड, लखनऊ (Sarfarazganj, Balaganj, Hardoi Road, Lucknow)
 
 --------------------------------------------------------------------------------
 3. AUSPICIOUS EVENTS SCHEDULE (मांगलिक कार्यक्रम विवरण)
@@ -64,9 +68,17 @@ GROOM (वर):
 
 [4] भीगी पलकें / विदाई (Vidaai - Bheegi Palkein)
     • Date: शनिवार, 05 दिसम्बर 2026 (Saturday, 05 December 2026)
-    • Time: प्रातः 7:00 बजे (7:00 AM)
     • Venue: चौधरी गार्डेन मैरिज लॉन, गोमती नगर, लखनऊ
     • Dress Code: पारंपरिक भारतीय (Traditional Indian)
+    (नोट: विदाई का कोई निर्धारित समय नहीं है / No specified time for Vidaai)
+
+[5] शुभ आशीर्वाद समारोह (Auspicious Blessing Ceremony / Reception)
+    • Date: सोमवार, 07 दिसम्बर 2026 (Monday, 07 December 2026)
+    • Time: सायं 7:00 बजे (7:00 PM)
+    • Venue: मेहता लॉन (Mehta Lawn)
+             सरफराजगंज, बालागंज, हरदोई रोड लखनऊ में सम्पन्न होंगे।
+             (Sarfarazganj, Balaganj, Hardoi Road, Lucknow)
+    • Dress Code: मांगलिक उत्सव परिधान / Formal Royal Indian Attire
 
 --------------------------------------------------------------------------------
 4. FAMILY MEMBERS & COMPLIMENTS (पारिवारिक विवरण)
@@ -78,6 +90,7 @@ GROOM (वर):
 
 विनीत:
   • श्रीमती विमला यादव व श्री शिवराम यादव
+  • श्रीमती जानकी यादव एवं समस्त यादव परिवार
 
 बाल आग्रह:
   "नो रील्स, नो स्क्रॉलिंग, नो बहाना, हमारी बुआ की शादी में जुलूल-जुलूल आना!"

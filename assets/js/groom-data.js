@@ -1,6 +1,62 @@
 // Groom Side Data & Configuration
 (function() {
-  const WALK_DATA = {"id": "walk-ram-mandir", "name": {"en": "Ayodhya Dham", "hi": "अयोध्या धाम"}, "base": "ayodhya", "art": "themes/ayodhya/", "music": "themes/theme.mp3", "poster": "../../walks/walk-ram-mandir/film-a2-poster.webp", "invocation": "॥ जय सियाराम ॥", "ornament": "divider.webp", "palette": {"ink": "#2A1C14", "paper": "#F6EEDF", "accent": "#C8551B", "gold": "#C9973F", "night": "#0A0F26", "ivory": "#FBF4E6", "muted": "#8A7560"}, "fonts": {"display": "Cormorant Garamond", "serif": "Cormorant Garamond", "deva": "Tiro Devanagari Hindi"}, "functions": {"haldi": {"art": "fn-haldi.webp", "trim": [0.102, 0.147, 0.897, 0.87], "wall": "#2A2148", "accent": "#F2C45A"}, "mehendi": {"art": "fn-mehendi.webp", "trim": [0.142, 0.123, 0.858, 0.816], "wall": "#15283F", "accent": "#E8C770"}, "sangeet": {"art": "fn-sangeet.webp", "trim": [0.131, 0.128, 0.866, 0.784], "wall": "#24174A", "accent": "#E9B85C"}, "wedding": {"art": "fn-wedding.webp", "trim": [0.166, 0.136, 0.836, 0.863], "wall": "#2E1433", "accent": "#F2C976"}, "reception": {"art": "fn-reception.webp", "trim": [0.156, 0.122, 0.841, 0.836], "wall": "#141A3D", "accent": "#E6B04C"}}, "scenes": [{"id": "arrival", "type": "still", "length": 1.2, "chapter": {"en": "Ayodhya", "hi": "अयोध्या"}, "image": {"src": "../../walks/walk-ram-mandir/film-a2-poster.webp", "w": 1080, "h": 1920}, "extend": {"top": 0.5, "mirror": 0.05, "tone": "#060A1C", "dark": 0.55}, "stars": {"count": 36, "zone": [0, -0.5, 1, 0.12]}, "camera": {"from": {"box": [0, -0.32, 1, 0.68], "mode": "fill"}, "to": {"box": [0, 0, 1, 1], "mode": "fill"}, "ease": "inOut"}, "copy": [{"block": "arrival", "zone": [0.08, -0.29, 0.92, 0.0], "align": "middle", "at": [0, 0.25]}], "exit": {"type": "cut"}}, {"id": "temple", "type": "film", "film": "film-a2.json", "poster": "../../walks/walk-ram-mandir/film-a2-poster.webp", "secondsPerScreen": 5.2, "chapter": {"en": "The temple", "hi": "मंदिर"}, "copy": [{"block": "story", "zone": [0.1, 0.7, 0.9, 0.93], "align": "middle", "at": [7.2, 8.6]}], "exit": {"type": "cut"}}, {"id": "sanctum", "type": "still", "length": 2.2, "chapter": {"en": "The blessing", "hi": "आशीर्वाद"}, "image": {"src": "../../walks/walk-ram-mandir/sanctum.webp", "w": 1536, "h": 2752}, "camera": {"from": {"box": [0.0708, 0, 0.9292, 0.8586], "mode": "fill"}, "to": {"box": [0.16, 0.2, 0.84, 0.88], "mode": "fill"}, "ease": "inOut", "span": [0, 0.45]}, "copy": [{"block": "blessing", "zone": [0.22, 0.3, 0.78, 0.74], "align": "middle", "at": [0.3, 0.55], "tone": "dark", "veil": 0.88}], "exit": {"type": "zoom", "portal": [0.405, 0.35, 0.605, 0.67], "shape": "rect", "length": 0.8}}, {"id": "darshan", "type": "still", "blessing": true, "length": 1.4, "chapter": {"en": "Ram Darbar", "hi": "राम दरबार"}, "image": {"src": "../../walks/walk-ram-mandir/darshan.webp", "w": 1536, "h": 2752}, "extend": {"top": 0.32, "mirror": 0.06, "tone": "#B88E62", "dark": 0.25}, "camera": {"from": {"box": [0, -0.3, 1, 1], "mode": "fill", "align": [0.5, 0.62]}, "to": {"box": [0, -0.3, 1, 1], "mode": "fill", "align": [0.5, 0.62]}, "ease": "out"}, "copy": [], "exit": {"type": "cut"}}, {"id": "rooms", "type": "room", "each": "function", "budget": 3.6, "length": 0.9, "arch": {"src": "../../walks/walk-ram-mandir/arch-tall.webp", "w": 900, "h": 1612}, "plaster": "#C9A28C", "floor": 0.7, "depth": {"art": 1.14, "arch": 1.45}, "camera": {"from": {"box": [0, 0, 1, 1], "mode": "fill"}, "to": {"box": [0.03, 0.03, 0.97, 0.97], "mode": "fill", "align": [0.5, 0.42]}, "ease": "out"}, "copy": [{"block": "function", "zone": "auto", "align": "middle", "at": [0.08, 0.5]}], "exit": {"type": "fade", "length": 0.4}}, {"id": "saryu", "type": "film", "film": "film-b2.json", "poster": "../../walks/walk-ram-mandir/film-b2-poster.webp", "secondsPerScreen": 3.4, "chapter": {"en": "By the Saryu", "hi": "सरयू के तट पर"}, "copy": [{"block": "venue", "zone": [0.08, 0.06, 0.92, 0.46], "align": "top", "at": [4.3, 5.4]}, {"block": "reply", "zone": [0.1, 0.06, 0.9, 0.46], "align": "top", "at": [7.4, 7.833]}], "exit": {"type": "end"}}]};
+  const WALK_DATA = {"id": "walk-ram-mandir", "name": {"en": "Ayodhya Dham", "hi": "अयोध्या धाम"}, "base": "ayodhya", "art": "themes/ayodhya/", "music": "themes/theme.mp3", "poster": "../../walks/walk-ram-mandir/film-a2-poster.webp", "invocation": "॥ जय सियाराम ॥", "ornament": "divider.webp", "palette": {"ink": "#2A1C14", "paper": "#F6EEDF", "accent": "#C8551B", "gold": "#C9973F", "night": "#0A0F26", "ivory": "#FBF4E6", "muted": "#8A7560"}, "fonts": {"display": "Cormorant Garamond", "serif": "Cormorant Garamond", "deva": "Tiro Devanagari Hindi"},     "functions": {
+      "haldi": {
+        "art": "fn-haldi.webp",
+        "trim": [
+          0.102,
+          0.147,
+          0.897,
+          0.87
+        ],
+        "wall": "#2A2148",
+        "accent": "#F2C45A"
+      },
+      "mehendi": {
+        "art": "fn-mehendi.webp",
+        "trim": [
+          0.142,
+          0.123,
+          0.858,
+          0.816
+        ],
+        "wall": "#15283F",
+        "accent": "#E8C770"
+      },
+      "wedding": {
+        "art": "fn-wedding.webp",
+        "trim": [
+          0.166,
+          0.136,
+          0.836,
+          0.863
+        ],
+        "wall": "#2E1433",
+        "accent": "#F2C976"
+      },
+      "vidaai": {
+        "art": "fn-vidaai.webp",
+        "trim": [
+          0.02,
+          0.02,
+          0.98,
+          0.98
+        ],
+        "wall": "#2E1433",
+        "accent": "#F2C976"
+      },
+      "reception": {
+        "art": "fn-reception.webp",
+        "trim": [
+          0.156,
+          0.122,
+          0.841,
+          0.836
+        ],
+        "wall": "#141A3D",
+        "accent": "#E6B04C"
+      }
+    }, "scenes": [{"id": "arrival", "type": "still", "length": 1.2, "chapter": {"en": "Ayodhya", "hi": "अयोध्या"}, "image": {"src": "../../walks/walk-ram-mandir/film-a2-poster.webp", "w": 1080, "h": 1920}, "extend": {"top": 0.5, "mirror": 0.05, "tone": "#060A1C", "dark": 0.55}, "stars": {"count": 36, "zone": [0, -0.5, 1, 0.12]}, "camera": {"from": {"box": [0, -0.32, 1, 0.68], "mode": "fill"}, "to": {"box": [0, 0, 1, 1], "mode": "fill"}, "ease": "inOut"}, "copy": [{"block": "arrival", "zone": [0.08, -0.29, 0.92, 0.0], "align": "middle", "at": [0, 0.25]}], "exit": {"type": "cut"}}, {"id": "temple", "type": "film", "film": "film-a2.json", "poster": "../../walks/walk-ram-mandir/film-a2-poster.webp", "secondsPerScreen": 5.2, "chapter": {"en": "The temple", "hi": "मंदिर"}, "copy": [{"block": "story", "zone": [0.1, 0.7, 0.9, 0.93], "align": "middle", "at": [7.2, 8.6]}], "exit": {"type": "cut"}}, {"id": "sanctum", "type": "still", "length": 2.2, "chapter": {"en": "The blessing", "hi": "आशीर्वाद"}, "image": {"src": "../../walks/walk-ram-mandir/sanctum.webp", "w": 1536, "h": 2752}, "camera": {"from": {"box": [0.0708, 0, 0.9292, 0.8586], "mode": "fill"}, "to": {"box": [0.16, 0.2, 0.84, 0.88], "mode": "fill"}, "ease": "inOut", "span": [0, 0.45]}, "copy": [{"block": "blessing", "zone": [0.22, 0.3, 0.78, 0.74], "align": "middle", "at": [0.3, 0.55], "tone": "dark", "veil": 0.88}], "exit": {"type": "zoom", "portal": [0.405, 0.35, 0.605, 0.67], "shape": "rect", "length": 0.8}}, {"id": "darshan", "type": "still", "blessing": true, "length": 1.4, "chapter": {"en": "Ram Darbar", "hi": "राम दरबार"}, "image": {"src": "../../walks/walk-ram-mandir/darshan.webp", "w": 1536, "h": 2752}, "extend": {"top": 0.32, "mirror": 0.06, "tone": "#B88E62", "dark": 0.25}, "camera": {"from": {"box": [0, -0.3, 1, 1], "mode": "fill", "align": [0.5, 0.62]}, "to": {"box": [0, -0.3, 1, 1], "mode": "fill", "align": [0.5, 0.62]}, "ease": "out"}, "copy": [], "exit": {"type": "cut"}}, {"id": "rooms", "type": "room", "each": "function", "budget": 3.6, "length": 0.9, "arch": {"src": "../../walks/walk-ram-mandir/arch-tall.webp", "w": 900, "h": 1612}, "plaster": "#C9A28C", "floor": 0.7, "depth": {"art": 1.14, "arch": 1.45}, "camera": {"from": {"box": [0, 0, 1, 1], "mode": "fill"}, "to": {"box": [0.03, 0.03, 0.97, 0.97], "mode": "fill", "align": [0.5, 0.42]}, "ease": "out"}, "copy": [{"block": "function", "zone": "auto", "align": "middle", "at": [0.08, 0.5]}], "exit": {"type": "fade", "length": 0.4}}, {"id": "saryu", "type": "film", "film": "film-b2.json", "poster": "../../walks/walk-ram-mandir/film-b2-poster.webp", "secondsPerScreen": 3.4, "chapter": {"en": "By the Saryu", "hi": "सरयू के तट पर"}, "copy": [{"block": "venue", "zone": [0.08, 0.06, 0.92, 0.46], "align": "top", "at": [4.3, 5.4]}, {"block": "reply", "zone": [0.1, 0.06, 0.9, 0.46], "align": "top", "at": [7.4, 7.833]}], "exit": {"type": "end"}}]};
   const FILM_A2 = {"fps": 12, "count": 187, "width": 900, "height": 1600, "dir": "film-a2/", "ext": "webp", "duration": 15.625, "cuts": [0.0, 7.833, 15.625], "bytes": 14987816, "crop": [76, 0, 928, 1649], "joins": [0.92]};
   const FILM_B2 = {"fps": 12, "count": 94, "width": 900, "height": 1600, "dir": "film-b2/", "ext": "webp", "duration": 7.833, "cuts": [0.0, 7.833], "bytes": 8065760, "crop": [76, 0, 928, 1649], "joins": []};
   const origFetch = window.fetch;
@@ -201,28 +257,54 @@ window.SAATH = {
         "#F6ECD6"
       ]
     },
-    {
-      "id": "vidaai",
-      "name": {
-        "en": "Vidaai (Bheegi Palkein)",
-        "hi": "भीगी पलकें (विदाई)"
+          {
+        "id": "vidaai",
+        "art": "vidaai",
+        "noTime": true,
+        "time": false,
+        "name": {
+          "en": "Vidaai (Bheegi Palkein)",
+          "hi": "भीगी पलकें (विदाई)"
+        },
+        "start": "2026-12-05T07:00:00+05:30",
+        "end": "2026-12-05T10:00:00+05:30",
+        "place": {
+          "en": "Chaudhary Garden Marriage Lawn, Gomti Nagar, Lucknow",
+          "hi": "चौधरी गार्डेन मैरिज लॉन, गोमती नगर, लखनऊ"
+        },
+        "dress": {
+          "en": "Traditional Indian",
+          "hi": "पारंपरिक भारतीय"
+        },
+        "palette": [
+          "#B88E62",
+          "#D9B26A",
+          "#F5EDE0"
+        ]
       },
-      "start": "2026-12-05T07:00:00+05:30",
-      "end": "2026-12-05T10:00:00+05:30",
-      "place": {
-        "en": "Chaudhary Garden Marriage Lawn, Gomti Nagar, Lucknow",
-        "hi": "चौधरी गार्डेन मैरिज लॉन, गोमती नगर, लखनऊ"
-      },
-      "dress": {
-        "en": "Traditional Indian",
-        "hi": "पारंपरिक भारतीय"
-      },
-      "palette": [
-        "#B88E62",
-        "#D9B26A",
-        "#F5EDE0"
-      ]
-    }
+      {
+        "id": "reception",
+        "art": "reception",
+        "name": {
+          "en": "Auspicious Blessing Ceremony (Reception)",
+          "hi": "शुभ आशीर्वाद समारोह"
+        },
+        "start": "2026-12-07T19:00:00+05:30",
+        "end": "2026-12-07T23:59:00+05:30",
+        "place": {
+          "en": "Mehta Lawn, Sarfarazganj, Balaganj, Hardoi Road, Lucknow",
+          "hi": "मेहता लॉन, सरफराजगंज, बालागंज, हरदोई रोड लखनऊ में सम्पन्न होंगे।"
+        },
+        "dress": {
+          "en": "Festive Formal / Royal Indian Attire",
+          "hi": "मांगलिक उत्सव परिधान / पारंपरिक भारतीय"
+        },
+        "palette": [
+          "#C9973F",
+          "#141A3D",
+          "#FBF4E6"
+        ]
+      }
   ],
   "story": {
     "en": "Under the divine aura of Shri Ram Darbar and Lord Ganesha, Amit and Priyanka embark upon the sacred union of marriage. We cordially request your gracious presence and blessings.",
@@ -259,16 +341,26 @@ window.SAATH = {
         "hi": "तिलक एवं शुभ विवाह, चौधरी गार्डेन"
       }
     },
-    {
-      "when": {
-        "en": "05 Dec 2026",
-        "hi": "०५ दिसम्बर २०२६"
-      },
-      "what": {
-        "en": "Vidaai - Bheegi Palkein",
-        "hi": "विदाई - भीगी पलकें"
-      }
-    }
+            {
+          "when": {
+            "en": "05 Dec 2026",
+            "hi": "०५ दिसम्बर २०२६"
+          },
+          "what": {
+            "en": "Vidaai - Bheegi Palkein",
+            "hi": "विदाई - भीगी पलकें"
+          }
+        },
+        {
+          "when": {
+            "en": "07 Dec 2026",
+            "hi": "०७ दिसम्बर २०२६"
+          },
+          "what": {
+            "en": "Auspicious Blessing Ceremony (Reception), Mehta Lawn",
+            "hi": "शुभ आशीर्वाद समारोह, मेहता लॉन, लखनऊ"
+          }
+        }
   ],
   "family": null,
   "families": [],
@@ -335,7 +427,7 @@ window.SAATH = {
       "serif": "Cormorant Garamond",
       "deva": "Tiro Devanagari Hindi"
     },
-    "functions": {
+        "functions": {
       "haldi": {
         "art": "fn-haldi.webp",
         "trim": [
@@ -358,17 +450,6 @@ window.SAATH = {
         "wall": "#15283F",
         "accent": "#E8C770"
       },
-      "sangeet": {
-        "art": "fn-sangeet.webp",
-        "trim": [
-          0.131,
-          0.128,
-          0.866,
-          0.784
-        ],
-        "wall": "#24174A",
-        "accent": "#E9B85C"
-      },
       "wedding": {
         "art": "fn-wedding.webp",
         "trim": [
@@ -376,6 +457,17 @@ window.SAATH = {
           0.136,
           0.836,
           0.863
+        ],
+        "wall": "#2E1433",
+        "accent": "#F2C976"
+      },
+      "vidaai": {
+        "art": "fn-vidaai.webp",
+        "trim": [
+          0.02,
+          0.02,
+          0.98,
+          0.98
         ],
         "wall": "#2E1433",
         "accent": "#F2C976"

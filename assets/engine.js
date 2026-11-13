@@ -529,9 +529,10 @@
   const lines = (s) => String(s ?? "").split("\n").map((l) => esc(l.trim())).filter(Boolean).join("<br>");
   // A function's time, with "onwards" when it has no set end (onwards: true). Languages without the
   // words (langs.js) show the time alone.
-  const timeOf = (e, iso) => { const c = clock(iso || e.start), u = t(); return e?.onwards === true && u.fromTime ? u.fromTime(c) : c; };
+  const timeOf = (e, iso) => { if (e?.noTime || e?.time === false) return ""; const c = clock(iso || e.start), u = t(); return e?.onwards === true && u.fromTime ? u.fromTime(c) : c; };
   // The same in a function's card, where the time is large: the words round it set small.
   const timeParts = (e) => {
+    if (e?.noTime || e?.time === false) return "";
     const c = clock(e.start), all = timeOf(e), i = all.indexOf(c);
     if (all === c || i < 0) return esc(all);
     const before = all.slice(0, i).trim(), after = all.slice(i + c.length).trim();
@@ -1394,7 +1395,7 @@
             ${img ? `<img class="art reveal" src="${img}" alt="" loading="lazy" decoding="async">` : `<span class="art glyph reveal" aria-hidden="true">${ORN}</span>`}
             <div class="txt reveal">
               <span class="caps" ${LA()}>${esc(fmt(e.start, { weekday: "short", day: "numeric", month: "short" }))}</span>
-              <span class="time" ${LA()}>${timeParts(e)}</span>
+              ${(e?.noTime || e?.time === false) ? "" : `<span class="time" ${LA()}>${timeParts(e)}</span>`}
               ${hidden("eventName") ? "" : `<span class="nm" ${LA()}>${esc(pick(e.name))}${lang === "en" && e.name.hi ? `<small ${L2A()}>${esc(e.name.hi)}</small>` : ""}</span>`}
               ${has(e.place) && !hidden("eventPlace") ? `<span class="place" ${LA()}>${esc(pick(e.place))}</span>` : ""}
               ${has(e.address) && !has(e.place) ? `<span class="addr" ${LA()}>${esc(pick(e.address))}</span>` : ""}
@@ -1430,9 +1431,9 @@
     for (const e of away) { const p = places.find((x) => x.key === placeOf(e)); if (p) p.evs.push(e); else places.push({ key: placeOf(e), evs: [e] }); }
     const main = has(data.venue.name) || has(data.venue.address);
     return sec("venue", u.venueT, `
-      ${has(data.city) ? `<p class="city reveal" ${LA()}>${esc(pick(data.city))}</p>` : ""}
+      ${has(data.venue.name) ? `<p class="city reveal" ${LA()}>${esc(pick(data.venue.name))}</p>` : ""}
+      ${has(data.city) ? `<p class="venue-name reveal" ${LA()}>${esc(pick(data.city))}</p>` : ""}
       ${here && main ? `<p class="caps venue-for reveal" ${LA()}>${esc(here)}</p>` : ""}
-      ${has(data.venue.name) ? `<p class="venue-name reveal" ${LA()}>${esc(pick(data.venue.name))}</p>` : ""}
       ${has(data.venue.address) ? `<p class="venue-addr reveal" ${LA()}>${esc(pick(data.venue.address))}</p>` : ""}
       ${data.venue.photo ? `<img class="venue-art venue-photo reveal" src="${esc(media(data.venue.photo))}" alt="" loading="lazy" decoding="async" data-clarity-mask="true">`
         : art("venue") ? `<img class="venue-art reveal" src="${art("venue")}" alt="" loading="lazy" decoding="async">` : ""}

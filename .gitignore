@@ -1,8 +1,11 @@
 # Ignore root directory user files as requested
 /*.png
 /*.pdf
+/*.jpeg
+/*.jpg
 /Kanishk Sagarika (1).png
 /Priyanka yadav & Amit - Dec.pdf
+/vidaai.jpeg
 
 # Playwright temporary files
 .playwright-mcp/

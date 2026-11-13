@@ -354,7 +354,7 @@
   const fmt = (iso, o) => (lang === "hi" && PK()?.meta.months ? window.SaathLangs.format(L2, iso, o) : new Intl.DateTimeFormat(u_().locale, { timeZone: "Asia/Kolkata", ...o }).format(new Date(iso)));
   // Hindi invitations name the part of the day rather than writing am/pm: सुबह 10:30, शाम 7:00.
   // A function's time, with "onwards" when it has no set end (onwards); a language without the words gives the time alone.
-  const timeOf = (ev) => { const c = clock(ev.start), w = u_(); return ev.onwards === true && w.fromTime ? w.fromTime(c) : c; };
+  const timeOf = (ev) => { if (ev?.noTime || ev?.time === false) return ""; const c = clock(ev.start), w = u_(); return ev.onwards === true && w.fromTime ? w.fromTime(c) : c; };
   const clock = (iso) => {
     if (lang !== "hi") return fmt(iso, { hour: "numeric", minute: "2-digit" });
     if (PK()) return window.SaathLangs.clock(L2, iso);
@@ -1770,7 +1770,7 @@
     if (has(family?.note)) parts.push(sec("s-note", u.noteK, `<p class="note-text" ${L()}>${esc(pick(family.note))}</p>`));
     if (evs.length) parts.push(sec("s-events", u.evT, `<div class="evs">${evs.map((e) => { const i = d.events.indexOf(e); return `<article class="ev">
         <h3 ${L()}>${esc(pick(e.name))}${lang === "en" && e.name.hi ? ` <small ${L2A()}>${esc(e.name.hi)}</small>` : ""}</h3>
-        <p class="t" ${L()}>${esc(fmt(e.start, { weekday: "long", day: "numeric", month: "long" }))}, ${esc(timeOf(e))}${has(e.place) ? `<br>${esc(pick(e.place))}` : ""}${has(e.address) && !has(e.place) ? `<br>${esc(pick(e.address))}` : ""}${has(e.address) && has(e.place) && awayTown(e) ? `<br>${esc(awayTown(e))}` : ""}${!ownVenue(e) && has(d.city) && (d.events || []).some(ownVenue) ? `<br>${esc(pick(d.city))}` : ""}</p>
+        <p class="t" ${L()}>${esc(fmt(e.start, { weekday: "long", day: "numeric", month: "long" }))}${timeOf(e) ? `, ${esc(timeOf(e))}` : ""}${has(e.place) ? `<br>${esc(pick(e.place))}` : ""}${has(e.address) && !has(e.place) ? `<br>${esc(pick(e.address))}` : ""}${has(e.address) && has(e.place) && awayTown(e) ? `<br>${esc(awayTown(e))}` : ""}${!ownVenue(e) && has(d.city) && (d.events || []).some(ownVenue) ? `<br>${esc(pick(d.city))}` : ""}</p>
         ${has(e.dress) || has(e.palette) ? `<p class="d" ${L()}><span class="dk">${esc(u.dressK)}</span>${has(e.palette) ? `<span class="sw" aria-hidden="true">${e.palette.map((c) => `<i style="background:${esc(c)}"></i>`).join("")}</span>` : ""}${has(e.dress) ? `<span>${esc(pick(e.dress))}</span>` : ""}</p>` : ""}
         <p class="ev-acts"><button class="cal" type="button" data-cal="${i}" ${L()}>${esc(u.addCal)}</button>${mapOf(e) ? `<a class="cal" href="${esc(mapOf(e))}" target="_blank" rel="noopener" ${L()}>${esc(u.directions)}</a>` : ""}</p>
       </article>`; }).join("")}</div>`));

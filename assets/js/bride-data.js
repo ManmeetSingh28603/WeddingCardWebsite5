@@ -196,6 +196,8 @@ window.SAATH = {
     {
       "id": "vidaai",
       "art": "reception",
+      "noTime": true,
+      "time": false,
       "name": {
         "en": "Vidaai (Bheegi Palkein)",
         "hi": "भीगी पलकें (विदाई)"
