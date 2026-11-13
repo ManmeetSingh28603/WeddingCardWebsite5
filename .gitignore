@@ -3,3 +3,6 @@
 /*.pdf
 /Kanishk Sagarika (1).png
 /Priyanka yadav & Amit - Dec.pdf
+
+# Playwright temporary files
+.playwright-mcp/
