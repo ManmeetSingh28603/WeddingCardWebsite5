@@ -286,7 +286,7 @@ window.SAATH = {
         "id": "reception",
         "art": "reception",
         "name": {
-          "en": "Auspicious Blessing Ceremony (Reception)",
+          "en": "Reception",
           "hi": "शुभ आशीर्वाद समारोह"
         },
         "start": "2026-12-07T19:00:00+05:30",
@@ -357,7 +357,7 @@ window.SAATH = {
             "hi": "०७ दिसम्बर २०२६"
           },
           "what": {
-            "en": "Auspicious Blessing Ceremony (Reception), Mehta Lawn",
+            "en": "Reception, Mehta Lawn",
             "hi": "शुभ आशीर्वाद समारोह, मेहता लॉन, लखनऊ"
           }
         }
