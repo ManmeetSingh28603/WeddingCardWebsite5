@@ -432,8 +432,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .upi-hint:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 13px/1.5 var(--deva); }
 .upi-id.copied { border-color: var(--gold); }
 /* "Invite made with" the Saath mark, at the size of the words, and saath.studio. */
-.made { display: inline-flex; align-items: center; gap: 5px; margin-top: 18px; color: var(--muted); font: 400 12.5px/1.4 var(--sans); text-decoration: none; }
-.made img { width: 1.2em; height: 1.2em; margin-left: 2px; }
+.made { display: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   .next.bob svg, .pill[aria-pressed="true"] .bars i { animation: none; }

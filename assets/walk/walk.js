@@ -1842,8 +1842,7 @@
     const painted = SAATH.draft ? "" : (() => { const q = new URLSearchParams(location.search); q.set("t", WALK.base || "jharokha"); ["video", "open", "at", "debug"].forEach((k) => q.delete(k)); return `${location.pathname}?${q}`; })();
     parts.push(`<footer class="signoff">
       ${has(d.signoff) ? `<p class="so" ${L()}>${esc(nb(pick(d.signoff)))}</p>` : ""}
-      ${painted ? `<a class="painted" href="${esc(painted)}" ${L()}>${esc(u.painted)}</a>` : ""}
-      <a class="made" href="https://saath.studio" target="_blank" rel="noopener"><span ${L()}>${esc(u.made)}</span><img src="${ROOT}mark.svg" alt="" width="15" height="15">saath.studio</a></footer>`);
+      ${painted ? `<a class="painted" href="${esc(painted)}" ${L()}>${esc(u.painted)}</a>` : ""}</footer>`);
     $("#sheetTitle").textContent = couple();
     tagEl($("#sheetTitle"));
     const body = $("#sheetBody");

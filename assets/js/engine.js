@@ -1602,7 +1602,6 @@
         ${has(data.signoff) ? `<p class="so-text" ${LA()}>${String(pick(data.signoff)).split("\n").map((l) => l.trim()).filter(Boolean).map((l) => `<span>${esc(nb(l))}</span>`).join("")}</p>` : ""}
         ${logoMark("so-logo")}
         <p class="so-names" ${LA()}>${names}</p>
-        <a class="made" href="https://saath.studio" target="_blank" rel="noopener"><span ${LA()}>${esc(u.made)}</span><img src="${ROOT}mark.svg" alt="" width="16" height="16">saath.studio</a>
       </footer>`;
     document.documentElement.style.setProperty("--arch", `url("${archMask()}")`);
     drawArch();
