@@ -219,7 +219,7 @@ window.SAATH = {
         "en": "Haldi & Mehendi",
         "hi": "हल्दी एवं मेंहदी"
       },
-      "start": "2026-12-03T16:00:00+05:30",
+      "start": "2026-12-03T15:00:00+05:30",
       "end": "2026-12-03T21:00:00+05:30",
       "place": {
         "en": "Groom's Residence: 358/195, Biharipur, Saadatganj, Lucknow",

@@ -1705,7 +1705,7 @@
     tagEl($("#langBtn"), tagOf(lang === "en" ? "hi" : "en"));
     $("#detailsBtn").textContent = u.invitation;
     tagEl($("#detailsBtn"));
-    $("#soundBtn").setAttribute("aria-label", $("#music").paused ? u.music : u.musicOff);
+    $("#soundBtn")?.setAttribute("aria-label", $("#music")?.paused ? u.music : u.musicOff);
     $("#skip").textContent = u.skip;
     $("#walk").setAttribute("aria-label", u.walkLabel(couple()));
     $("#closeBtn").setAttribute("aria-label", u.close);
@@ -1997,26 +1997,59 @@
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   }
 
-  // ───────── Music, only after a tap ─────────
+  // ───────── Music, automatic on scroll ─────────
   const music = $("#music");
+  let musicStarted = false;
   function fadeTo(to, ms) {
+    if (!music) return;
     const from = music.volume, t0 = performance.now();
     const step = (n) => { const k = Math.min(1, (n - t0) / ms); music.volume = clamp(from + (to - from) * k); if (k < 1) requestAnimationFrame(step); else if (to === 0) music.pause(); };
     requestAnimationFrame(step);
   }
+  function startMusicAuto() {
+    if (musicStarted || !music) return;
+    if (data?.music === "off") return;
+    if (!music.paused && music.currentTime > 0) {
+      musicStarted = true;
+      detachAutoMusic();
+      return;
+    }
+    if (!music.getAttribute("src")) music.src = /^\/api\/wedding\/media\/[0-9a-f-]{36}$/.test(data?.music || "") ? data.music : ROOT + (/^music\/[a-z0-9-]+\.mp3$/.test(data?.music || "") ? data.music : WALK.music || "themes/theme.mp3");
+    music.volume = 0;
+    const playPromise = music.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        musicStarted = true;
+        fadeTo(0.7, 1200);
+        detachAutoMusic();
+      }).catch(() => {});
+    }
+  }
+  const musicTriggerEvents = ["scroll", "wheel", "touchmove", "touchstart", "pointerdown", "keydown"];
+  function detachAutoMusic() {
+    musicTriggerEvents.forEach((ev) => window.removeEventListener(ev, startMusicAuto));
+    document.removeEventListener("scroll", startMusicAuto);
+  }
+  function attachAutoMusic() {
+    musicTriggerEvents.forEach((ev) => window.addEventListener(ev, startMusicAuto, { passive: true }));
+    document.addEventListener("scroll", startMusicAuto, { passive: true });
+  }
   function toggleMusic() {
+    if (!music) return;
     if (music.paused) {
       // The couple's own song (kept with their photos), a track from the music library, or the walk's own.
-      if (!music.getAttribute("src")) music.src = /^\/api\/wedding\/media\/[0-9a-f-]{36}$/.test(data.music || "") ? data.music : ROOT + (/^music\/[a-z0-9-]+\.mp3$/.test(data.music || "") ? data.music : WALK.music || "themes/theme.mp3");
+      if (!music.getAttribute("src")) music.src = /^\/api\/wedding\/media\/[0-9a-f-]{36}$/.test(data?.music || "") ? data.music : ROOT + (/^music\/[a-z0-9-]+\.mp3$/.test(data?.music || "") ? data.music : WALK.music || "themes/theme.mp3");
       music.volume = 0;
       music.play().then(() => fadeTo(0.7, 1200)).catch(() => {});
     } else fadeTo(0, 450);
   }
-  music.addEventListener("play", () => { $("#soundBtn").setAttribute("aria-pressed", "true"); $("#soundBtn").setAttribute("aria-label", u_().musicOff); });
-  music.addEventListener("pause", () => { $("#soundBtn").setAttribute("aria-pressed", "false"); $("#soundBtn").setAttribute("aria-label", u_().music); });
+  if (music) {
+    music.addEventListener("play", () => { $("#soundBtn")?.setAttribute("aria-pressed", "true"); $("#soundBtn")?.setAttribute("aria-label", u_().musicOff); });
+    music.addEventListener("pause", () => { $("#soundBtn")?.setAttribute("aria-pressed", "false"); $("#soundBtn")?.setAttribute("aria-label", u_().music); });
+  }
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden && !music.paused) { music.pause(); music.dataset.resume = "1"; }
-    else if (!document.hidden && music.dataset.resume) { delete music.dataset.resume; music.play().catch(() => {}); }
+    if (document.hidden && music && !music.paused) { music.pause(); music.dataset.resume = "1"; }
+    else if (!document.hidden && music && music.dataset.resume) { delete music.dataset.resume; music.play().catch(() => {}); }
   });
 
   // ───────── Scroll, layout and the loop ─────────
@@ -2052,9 +2085,11 @@
     if (p !== target) dir = p > target ? 1 : -1;
     target = p;
     if (reduced || debugSnap) pos = target;
+    if (scrollY > 5 || pos > 0.01) startMusicAuto();
   }
   const scrollToPos = (p, smoothly = true) => scrollTo({ top: walkTop + p * unit, behavior: smoothly && !reduced ? "smooth" : "auto" });
   function walkOn() {
+    startMusicAuto();
     const s = sceneAt(pos + 0.12);
     if (s.index === scenes.length - 1) return scrollToPos(0);
     const next = stops.find((x) => x > pos + 0.06);
@@ -2248,10 +2283,13 @@
     new ResizeObserver(() => layout()).observe(stage);
     addEventListener("resize", () => layout());
 
-    $("#langBtn").addEventListener("click", () => setLang(lang === "hi" ? "en" : "hi"));
+    attachAutoMusic();
+    $("#langBtn")?.addEventListener("click", () => setLang(lang === "hi" ? "en" : "hi"));
     // "off": the couple chose no music, so there's no button for it.
-    if (data.music === "off") $("#soundBtn").style.display = "none";
-    else $("#soundBtn").addEventListener("click", toggleMusic);
+    if ($("#soundBtn")) {
+      if (data.music === "off") $("#soundBtn").style.display = "none";
+      else $("#soundBtn").addEventListener("click", toggleMusic);
+    }
     $("#detailsBtn").addEventListener("click", () => openSheet("top"));
     $("#skip").addEventListener("click", (e) => { e.preventDefault(); openSheet("top"); });
     $("#closeBtn").addEventListener("click", () => $("#details").close());
