@@ -138,12 +138,12 @@ window.SAATH = {
   },
   "parents": {
     "him": {
-      "en": "Smt. Janki Yadav & Late Shri Bajrang Yadav",
-      "hi": "श्रीमती जानकी यादव एवं स्व० बजरंग यादव"
+      "en": "Smt. Janki Yadav & Late Shri Bajrang Yadav\n(Grandson of Late Shri Marhu Yadav & Late Shri Brijlal Yadav)",
+      "hi": "श्रीमती जानकी यादव एवं स्व० बजरंग यादव\n(पौत्र: स्व० मरहू यादव एवं स्व० बृज लाल यादव)"
     },
     "her": {
-      "en": "Smt. Vimla Yadav & Shri Shivram Yadav",
-      "hi": "श्रीमती विमला यादव एवं श्री शिवराम यादव"
+      "en": "Smt. Vimla Yadav & Shri Shivram Yadav\n(Granddaughter of Late Smt. Mangra Devi & Late Shri Harihar Yadav)",
+      "hi": "श्रीमती विमला यादव एवं श्री शिवराम यादव\n(पौत्री: स्व० मंगरा देवी एवं स्व० हरिहर यादव)"
     }
   },
   "wedding": "2026-12-04T19:00:00+05:30",

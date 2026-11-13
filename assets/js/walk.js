@@ -1419,7 +1419,7 @@
       if (!has(p.her) && !has(p.him)) return `${om}<p class="body lead" ${L()}>${esc(u.ownVoice)}</p>`;
       // Their families in the couple's order.
       return `${om}<p class="k" ${L()}>${esc(u.blessK)}</p>
-        ${two(p.her, p.him).filter(has).map((v) => `<p class="parents" ${L()}>${esc(nb(pick(v)))}</p>`).join(`
+        ${two(p.her, p.him).filter(has).map((v) => `<p class="parents" ${L()}>${String(pick(v)).split("\n").map((l) => l.trim()).filter(Boolean).map((l) => esc(nb(l))).join("<br>")}</p>`).join(`
         <p class="and" ${L()}>${esc(u.and)}</p>
         `)}
         <p class="body" ${L()}>${esc(u.blessClose)}</p>`;
