@@ -118,7 +118,7 @@
   // touches, scrolls or presses a key inside it: the poster and the words show meanwhile, so a visitor
   // who only looks at the opening never fetches the first film (about 3.5 MB for a lake).
   let holding = small && params.has("hold");
-  const media =(src) => (/^(data:|blob:|https?:|\/)/.test(src) ? src : `${ROOT}couples/${slug}/${src}`);
+  const media = (src) => (/^(data:|blob:|https?:|\/|assets\/|\.\/)/.test(src) ? src : `${ROOT}couples/${slug}/${src}`);
 
   // ───────── Words ─────────
   // A name in the words around it: "the Sharma family" after "For" or "From", a person's name and

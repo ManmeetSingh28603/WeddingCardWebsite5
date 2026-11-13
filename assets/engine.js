@@ -17,7 +17,7 @@
   const ROOT = SAATH.root || "";
   const slug = (params.get("c") || "demo").replace(/[^a-z0-9-]/gi, "");
   // Photos and voice notes come from the website as absolute URLs; older records name files beside the couple.
-  const media = (src) => (/^(data:|blob:|https?:|\/)/.test(src) ? src : `${ROOT}couples/${slug}/${src}`);
+  const media = (src) => (/^(data:|blob:|https?:|\/|assets\/|\.\/)/.test(src) ? src : `${ROOT}couples/${slug}/${src}`);
   // The family: from the page (a family's own link, i/<slug>/<key>, resolved by the site), or ?f=.
   const familyParam = (SAATH.family || params.get("f") || "").trim().slice(0, 40);
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1363,7 +1363,7 @@
 
   function secPhotos() {
     const u = t();
-    const names = lang === "hi" ? two(esc(data.her.hi), esc(data.him.hi)).join(` <span class="so-amp">${esc(UI[TAG].amp)}</span> `) : two(esc(data.her.en), esc(data.him.en)).join(` <span class="so-amp">&amp;</span> `);
+    const names = lang === "hi" ? two(data.her.hi, data.him.hi).join(" एवं ") : two(data.her.en, data.him.en).join(" & ");
     return sec("photos", u.photosT, `
       <div class="photos" role="list" data-clarity-mask="true">
         ${data.photos.map((p) => `<figure class="ph" role="listitem">

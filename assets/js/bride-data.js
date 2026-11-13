@@ -265,6 +265,36 @@ window.SAATH = {
       }
     }
   ],
+  "photos": [
+    {
+      "src": "assets/images/img1.jpeg",
+      "caption": {
+        "en": "Priyanka & Amit",
+        "hi": "प्रियंका एवं अमित"
+      }
+    },
+    {
+      "src": "assets/images/img2.jpeg",
+      "caption": {
+        "en": "Together in Love",
+        "hi": "सदा संग"
+      }
+    },
+    {
+      "src": "assets/images/img3.jpeg",
+      "caption": {
+        "en": "Cherished Moments",
+        "hi": "मधुर स्मृतियाँ"
+      }
+    },
+    {
+      "src": "assets/images/img4.jpeg",
+      "caption": {
+        "en": "A New Beginning",
+        "hi": "पावन परिणय"
+      }
+    }
+  ],
   "family": null,
   "families": [],
   "rsvp": true,
