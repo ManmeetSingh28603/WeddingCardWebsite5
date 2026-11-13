@@ -1,0 +1,223 @@
+{
+  "layout": "keepsake",
+  "id": "sheesh-mahal",
+  "name": "Sheesh Mahal",
+  "line": "A mirror palace in the dark. One lamp is lit, a thousand mirrors catch it, and your names wait in the glowing arch.",
+  "story": "In a Sheesh Mahal, the walls and the dome are set with thousands of tiny convex mirrors, so one lamp is enough to light the whole hall. Your invite opens in the dark, lights a single lamp and lets the mirrors do the rest, then keeps glittering behind your names.",
+  "palette": {
+    "ink": "#F3EADB",
+    "paper": "#14111C",
+    "accent": "#D9B26A",
+    "accent2": "#8E93A3",
+    "gold": "#E2BC72",
+    "night": "#0B0910"
+  },
+  "fonts": {
+    "script": "Corinthia",
+    "serif": "Cormorant Garamond",
+    "deva": "Tiro Devanagari Hindi",
+    "display": "Italiana"
+  },
+  "moods": {
+    "haldi": {
+      "accent": "#E3A93B",
+      "paper": "#1B1510"
+    },
+    "mehendi": {
+      "accent": "#8DB36A",
+      "paper": "#121712"
+    },
+    "sangeet": {
+      "accent": "#C58BD9",
+      "paper": "#16101C"
+    },
+    "wedding": {
+      "accent": "#E07A62",
+      "paper": "#1C1012"
+    },
+    "reception": {
+      "accent": "#D9B26A",
+      "paper": "#14111C"
+    }
+  },
+  "opening": {
+    "type": "keepsake",
+    "gesture": "lamp",
+    "film": "opening.mp4",
+    "first": "opening-first.webp",
+    "last": "opening-last.webp",
+    "loop": "loop.mp4",
+    "aspect": "9 / 16",
+    "focus": [
+      0.15,
+      0.18,
+      0.85,
+      0.86
+    ],
+    "tap": [
+      0.2,
+      0.24,
+      0.8,
+      0.86
+    ],
+    "from": 0.3,
+    "rate": 1.2,
+    "writeAt": 4.3,
+    "names": {
+      "left": 0.27,
+      "top": 0.33,
+      "right": 0.73,
+      "bottom": 0.64
+    },
+    "tone": "light",
+    "glints": [
+      {
+        "left": 0.02,
+        "top": 0.12,
+        "right": 0.2,
+        "bottom": 0.72
+      },
+      {
+        "left": 0.8,
+        "top": 0.12,
+        "right": 0.98,
+        "bottom": 0.72
+      },
+      {
+        "left": 0.12,
+        "top": 0,
+        "right": 0.88,
+        "bottom": 0.16
+      }
+    ],
+    "hint": {
+      "en": "Tap to light the lamp",
+      "hi": "दीया जलाने के लिए छुएँ"
+    },
+    "filmNote": "Made once in Google Flow (experiments/collections/2026-10-31-next-films, runs/flow/generations.json): Nano Banana keyframes sheesh-k0-a (the mirror hall in the dark, an unlit diya on a marble ledge) and sheesh-k1-a (the hall lit), and a Veo 3.1 Fast clip between them, cut at 5.6 s while the hall is at its brightest (Veo then dimmed it towards the keyframe), settled onto the first keyframe and cropped to the centred 9:16 window clear of Flow's marks. loop.mp4 is the film's last 1.5 s played backwards then forwards, so it starts on the frame the film ends on. Positions are fractions of the cropped frame.",
+    "edge": {
+      "top": "#111a23",
+      "bottom": "#0c1822"
+    }
+  },
+  "art": {
+    "closed": "closed.webp",
+    "open": "open.webp",
+    "hero": "hero.webp",
+    "paper": "paper.webp",
+    "frame": "frame.webp",
+    "divider": "divider.webp",
+    "corner": "corner.webp",
+    "motif": "motif.webp",
+    "frameZone": {
+      "top": 0.3,
+      "bottom": 0.9,
+      "left": 0.17,
+      "right": 0.83
+    },
+    "heroCouple": null,
+    "cardHero": {
+      "file": "open.webp",
+      "focus": [
+        0.5,
+        0.45
+      ]
+    },
+    "fn": {
+      "haldi": "fn-haldi.webp",
+      "mehendi": "fn-mehendi.webp",
+      "sangeet": "fn-sangeet.webp",
+      "wedding": "fn-wedding.webp",
+      "reception": "fn-reception.webp",
+      "engagement": "fn-engagement.webp"
+    },
+    "venue": "venue.webp",
+    "dress": "dress.webp",
+    "scenes": {
+      "invite": {
+        "file": "scene-invite.webp",
+        "corners": [
+          [
+            0.2025,
+            0.1426
+          ],
+          [
+            0.5293,
+            0.1396
+          ],
+          [
+            0.5312,
+            0.8037
+          ],
+          [
+            0.1992,
+            0.8076
+          ]
+        ]
+      },
+      "welcome": {
+        "file": "scene-welcome.webp",
+        "corners": [
+          [
+            0.2773,
+            0.2292
+          ],
+          [
+            0.7227,
+            0.2285
+          ],
+          [
+            0.7373,
+            0.6582
+          ],
+          [
+            0.2715,
+            0.6608
+          ]
+        ]
+      },
+      "table": {
+        "file": "scene-table.webp",
+        "corners": [
+          [
+            0.0651,
+            0.3984
+          ],
+          [
+            0.2324,
+            0.3936
+          ],
+          [
+            0.2227,
+            0.7842
+          ],
+          [
+            0.0482,
+            0.7881
+          ]
+        ]
+      },
+      "favour": {
+        "file": "scene-favour.webp",
+        "corners": [
+          [
+            0.3252,
+            0.3594
+          ],
+          [
+            0.6777,
+            0.3604
+          ],
+          [
+            0.6758,
+            0.6221
+          ],
+          [
+            0.3213,
+            0.6201
+          ]
+        ]
+      }
+    }
+  }
+}

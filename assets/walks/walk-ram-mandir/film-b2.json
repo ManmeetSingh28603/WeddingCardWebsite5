@@ -1,0 +1,21 @@
+{
+  "fps": 12,
+  "count": 94,
+  "width": 900,
+  "height": 1600,
+  "dir": "film-b2/",
+  "ext": "webp",
+  "duration": 7.833,
+  "cuts": [
+    0.0,
+    7.833
+  ],
+  "bytes": 8065760,
+  "crop": [
+    76,
+    0,
+    928,
+    1649
+  ],
+  "joins": []
+}

@@ -1,0 +1,443 @@
+/* The walk player's styles. A phone-shaped stage stays fixed while the page scrolls under it; on a
+   wide screen it stands in a story-shaped column in a dim room of its night colour. Words take light or dark
+   ink from the picture under them (walk.js sets data-tone and the shade). */
+:root {
+  --night: #16110d;
+  --ivory: #faf3e6;
+  --ink: #2a1a14;
+  --paper: #f3e7d1;
+  --gold: #c2933f;
+  --rani: #9e2a1f;
+  --muted: #6e5a49;
+  --rule: rgba(42, 26, 20, 0.14);
+  --display: "Bodoni Moda", "Tiro Devanagari Hindi", Georgia, serif;
+  --serif: "Cormorant Garamond", "Tiro Devanagari Hindi", Georgia, serif;
+  --deva: "Tiro Devanagari Hindi", "Cormorant Garamond", serif;
+  /* The second languages beyond Hindi (10 November 2026), as in engine.css. */
+  --l2-mr: "Tiro Devanagari Marathi", "Tiro Devanagari Hindi", serif;
+  --l2-bn: "Tiro Bangla", serif;
+  --l2-as: "Tiro Bangla", serif;
+  --l2-pa: "Tiro Gurmukhi", serif;
+  --l2-ur: "Gulzar", "Noto Nastaliq Urdu", serif;
+  --sans: "Jost", system-ui, sans-serif;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --stage-w: min(100vw, max(56.25svh, 420px));
+  --paper-tex: none;
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  color-scheme: dark;
+}
+/* Drawn inside the site's iPhone mockup (?phone=1): inside a frame env() is always 0, so the
+   island and home bar get an iPhone 15's real insets. */
+:root.in-phone { --safe-t: 59px; --safe-b: 34px; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; background: var(--night); }
+html.sheet-open { overflow: hidden; }
+body { margin: 0; background: var(--night); color: var(--ivory); font: 400 16px/1.5 var(--serif); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font-family: var(--deva); }
+/* Each second language's lines take its own script's face wherever a rule asks for --deva. */
+:lang(mr) { --deva: var(--l2-mr); }
+:lang(bn) { --deva: var(--l2-bn); }
+:lang(as) { --deva: var(--l2-as); }
+:lang(pa) { --deva: var(--l2-pa); }
+:lang(ur) { --deva: var(--l2-ur); line-height: 1.95 !important; }
+button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+a { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 1.5px solid var(--gold); outline-offset: 3px; }
+
+.skip { position: fixed; left: 12px; top: 12px; z-index: 50; padding: 10px 14px; border-radius: 8px; background: var(--paper); color: var(--ink); font: 500 14px/1.2 var(--sans); text-decoration: none; transform: translateY(-160%); transition: transform 200ms var(--ease-out); }
+.skip:focus { transform: none; }
+
+/* Wide screens: the stage stands in a dim room of the walk's night colour, lit where it stands, the
+   way a story is shown on a laptop. Never a blurred copy of the picture. */
+.backdrop { position: fixed; inset: 0; overflow: hidden; background: radial-gradient(90% 75% at 50% 40%, color-mix(in srgb, var(--night) 80%, var(--gold) 20%), var(--night) 78%); }
+.backdrop canvas { display: none; }
+
+/* ───────── The walk ───────── */
+.walk { position: relative; min-height: 100svh; }
+.stage {
+  position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index: 1;
+  width: var(--stage-w); margin: 0 auto; overflow: hidden;
+  background: #120d0a; box-shadow: 0 0 90px rgba(0, 0, 0, 0.5);
+  contain: strict;
+}
+.film { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.loading { position: absolute; left: 0; right: 0; top: 0; height: 2px; z-index: 7; pointer-events: none; transition: opacity 0.6s ease; }
+.loading i { display: block; height: 100%; background: var(--gold); transform-origin: left; transform: scaleX(0); transition: transform 0.3s linear; }
+.loading.done { opacity: 0; }
+/* While a scene's picture is on its way, a small turning ring where its words will be (walk.js
+   holds the words back). It shows only after a moment, so a quick load never flashes it. */
+.wait {
+  position: absolute; left: 50%; top: 50%; z-index: 5; width: 30px; height: 30px; margin: -15px 0 0 -15px;
+  border-radius: 50%; border: 1.5px solid rgba(250, 243, 230, 0.2); border-top-color: var(--gold);
+  opacity: 0; pointer-events: none; transition: opacity 0.25s ease; animation: wait-turn 0.9s linear infinite;
+}
+.wait.on { opacity: 1; transition: opacity 0.3s ease 0.4s; }
+@keyframes wait-turn { to { transform: rotate(360deg); } }
+
+/* ───────── The words ───────── */
+.copy { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+.blk {
+  position: absolute; left: 0; top: 0; margin: 0; text-align: center;
+  opacity: 0; visibility: hidden; will-change: transform, opacity;
+  --tx: #faf3e6; --tx2: rgba(250, 243, 230, 0.86); --ac: #e7c88e; --sh: 10 6 3; --sha: 0;
+  color: var(--tx);
+  text-shadow: 0 1px 14px rgba(8, 4, 2, 0.42), 0 0 2px rgba(8, 4, 2, 0.2);
+}
+.blk[data-tone="dark"] { --tx: #2a1a14; --tx2: #4e3b2e; text-shadow: 0 0 16px rgba(255, 250, 240, 0.55); }
+.blk.on { visibility: visible; }
+.blk.on a, .blk.on button { pointer-events: auto; }
+/* A soft pool of shade, only as strong as the picture needs. */
+.blk::before {
+  content: ""; position: absolute; z-index: -1; inset: -24% -15%; pointer-events: none;
+  background: radial-gradient(closest-side, rgb(var(--sh) / var(--sha)) 0%, rgb(var(--sh) / var(--sha)) 50%, rgb(var(--sh) / calc(var(--sha) * 0.6)) 74%, rgb(var(--sh) / 0) 100%);
+}
+.blk p { margin: 0; }
+.blk .k { margin: 0 0 8px; font: italic 500 17.5px/1.35 var(--serif); color: var(--ac); letter-spacing: 0.005em; text-wrap: balance; }
+.blk .k:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 16px/1.6 var(--deva); }
+.blk .om { margin: 0 0 10px; font: 400 16px/1.5 var(--deva); color: var(--ac); }
+.names { margin: 0; font: 400 clamp(40px, 12.4vw, 54px)/1.04 var(--display); letter-spacing: -0.012em; white-space: nowrap; }
+.names .amp { font-style: italic; font-size: 0.7em; color: var(--ac); margin: 0 0.02em; }
+/* On a sign (a niche, a board) long names stack rather than shrink on one line. */
+.blk.sign .names { white-space: normal; text-wrap: balance; }
+.names:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 clamp(36px, 10.8vw, 48px)/1.35 var(--deva); }
+.names:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) .amp { font-style: normal; font-size: 0.52em; vertical-align: 0.18em; }
+.orn { display: block; width: 132px; height: auto; margin: 12px auto 10px; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35)); }
+.blk .meta { font: 500 11.5px/1.65 var(--sans); letter-spacing: 0.18em; text-transform: uppercase; color: var(--tx2); }
+.blk .meta:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 15.5px/1.6 var(--deva); letter-spacing: 0; text-transform: none; }
+.blk .t { margin: 0; font: 400 clamp(31px, 9vw, 40px)/1.08 var(--display); letter-spacing: -0.008em; text-wrap: balance; }
+.blk .t small { display: block; margin-top: 4px; font: 400 18px/1.5 var(--deva); color: var(--tx2); letter-spacing: 0; }
+.blk .t:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 clamp(29px, 8.4vw, 36px)/1.38 var(--deva); }
+.blk .body { margin: 10px auto 0; max-width: 22.5rem; font: 500 19px/1.42 var(--serif); color: var(--tx); text-wrap: pretty; }
+.blk .body:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 16.5px/1.78 var(--deva); }
+.blk .body.lead { margin-top: 0; font-size: 22px; font-style: italic; }
+.blk .body.lead:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font-size: 18px; font-style: normal; }
+.blk .parents { margin: 3px 0; font: italic 500 21.5px/1.28 var(--serif); text-wrap: balance; }
+.blk .parents:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 18.5px/1.6 var(--deva); }
+.blk .and { margin: 2px 0; font: italic 400 16px/1.2 var(--serif); color: var(--ac); }
+.blk .and:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 15px/1.4 var(--deva); }
+.b-arrival .meta { margin-top: 0; }
+.b-arrival.compact .orn { display: none; }
+.b-arrival.compact .k { margin-bottom: 2px; }
+.b-arrival.compact .names { font-size: clamp(36px, 10.6vw, 46px); margin-bottom: 8px; }
+.b-blessing .body { margin-top: 10px; font-size: 18px; color: var(--tx2); text-wrap: balance; }
+.b-venue.compact .body { margin-top: 6px; }
+.b-reply.compact .so { display: none; }
+.b-blessing .body:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font-size: 16px; }
+.b-story .body { font-size: 18.5px; }
+.b-story.compact .body { font-size: 17px; line-height: 1.38; }
+.b-story .body.story { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 7; overflow: hidden; }
+.b-story.compact .body.story { -webkit-line-clamp: 5; }
+.b-story .more { margin-top: 2px; }
+.b-story .more[hidden] { display: none; }
+.thumbs { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
+.thumb { width: 72px; height: 94px; padding: 0; overflow: hidden; border: 1.5px solid rgba(255, 242, 220, 0.8); border-radius: 36px 36px 5px 5px; background: #2a1d14; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.38); rotate: calc((var(--i) - 1) * 3deg); transition: transform 160ms var(--ease-out); }
+.thumb:active { transform: scale(0.96); }
+/* Faces sit in the top third of a portrait: keep the heads inside the arch. */
+.thumb img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; }
+
+/* A save-the-date card on a card or board in the picture. */
+.b-date .k { margin-bottom: 4px; }
+.b-date .names { font-size: 60px; line-height: 1; }
+.b-date .names:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font-size: 52px; line-height: 1.2; }
+.b-date .day { margin: 10px 0 2px; font: 400 25px/1.2 var(--display); }
+.b-date .day:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 22px/1.5 var(--deva); }
+.b-date .meta { font-size: 14px; }
+.b-story.compact .thumb { width: 60px; height: 78px; }
+
+/* A room: the function, its time and place, and the colours to wear. */
+.b-function .k { margin-bottom: 6px; }
+.blk .dress { margin: 7px auto 0; max-width: 19.5rem; font: italic 500 16px/1.3 var(--serif); color: var(--tx2); text-wrap: balance; }
+.blk .dress:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 14.5px/1.6 var(--deva); }
+.dots { display: inline-flex; gap: 4px; flex: none; }
+.dots i { width: 12px; height: 12px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(255, 252, 245, 0.5); }
+.compact .dress { display: none; }
+.compact .t small { display: inline; margin: 0 0 0 6px; font-size: 16px; }
+.tight .t { font-size: 29px; }
+.tight .t small { display: none; }
+.blk .acts { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 6px; }
+.blk .link { border: 0; background: none; padding: 7px 2px; font: 500 13.5px/1.1 var(--sans); color: var(--tx); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: color-mix(in srgb, currentColor 45%, transparent); text-shadow: inherit; }
+.blk .link:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 15px/1.3 var(--deva); }
+
+.blk .btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 46px; margin-top: 16px; padding: 0 24px; border: 0; border-radius: 23px;
+  background: #ead0a0; color: #2a1a10; font: 500 15px/1 var(--sans); letter-spacing: 0.01em; text-decoration: none; text-shadow: none;
+  box-shadow: 0 8px 24px rgba(10, 5, 2, 0.3); transition: transform 160ms var(--ease-out);
+}
+.blk .btn:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 16px/1.2 var(--deva); }
+.blk .btn svg { width: 18px; height: 18px; }
+.blk .btn:active, .pill:active, .next:active { transform: scale(0.97); }
+.blk[data-tone="dark"] .btn { background: var(--ink); color: var(--ivory); }
+.blk .btn.line { background: rgba(255, 250, 240, 0.08); color: var(--tx); box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 55%, transparent); text-shadow: inherit; }
+.blk .btn + .link { display: flex; margin: 8px auto 0; }
+.blk .so { margin-top: 12px; font: italic 500 16px/1.4 var(--serif); color: var(--tx2); }
+.blk .so:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 15px/1.6 var(--deva); }
+
+/* The family's own note, tucked into the doors on a slip of paper. */
+.tag {
+  padding: 20px 22px 18px; border-radius: 2px; rotate: -1.6deg;
+  background: #f4e8d0 var(--paper-tex); background-size: 380px; color: var(--ink); text-shadow: none;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 14px 30px rgba(8, 4, 2, 0.5), 0 2px 6px rgba(8, 4, 2, 0.3);
+}
+.tag::before { content: ""; position: absolute; inset: auto; left: 50%; top: -34px; width: 1px; height: 40px; background: linear-gradient(rgba(214, 170, 96, 0), rgba(214, 170, 96, 0.9)); transform: translateX(-50%); }
+.tag::after { content: ""; position: absolute; left: 50%; top: 4px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #f3d699, #9c7330); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); }
+.tag-k { margin: 6px 0 10px !important; font: 500 10.5px/1.5 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--rani); }
+.tag-k:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 14px/1.5 var(--deva); letter-spacing: 0; text-transform: none; }
+.tag-note { font: italic 500 19.5px/1.38 var(--serif); text-wrap: pretty; }
+.tag-note:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 16.5px/1.75 var(--deva); }
+.tag-sign { margin-top: 10px !important; font: italic 400 15px/1.3 var(--serif); color: var(--muted); }
+.tag-sign:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 14px/1.5 var(--deva); }
+
+/* ───────── The bars ───────── */
+.bar { position: absolute; left: 0; right: 0; z-index: 6; display: flex; align-items: center; --bar: 250 243 230; --bar-sh: 10 6 3; color: rgb(var(--bar)); transition: color 400ms ease; }
+.bar[data-tone="dark"] { --bar: 42 26 20; --bar-sh: 255 249 238; }
+.bar::before { content: ""; position: absolute; left: 0; right: 0; z-index: -1; pointer-events: none; transition: opacity 400ms ease; }
+.bar.top { top: 0; justify-content: space-between; padding: calc(var(--safe-t) + 12px) 14px 0 18px; }
+.bar.top::before { top: 0; height: 96px; background: linear-gradient(rgb(var(--bar-sh) / 0.34), rgb(var(--bar-sh) / 0)); }
+.bar.bottom { bottom: 0; flex-wrap: wrap; justify-content: space-between; padding: 0 18px calc(var(--safe-b) + 12px); }
+.bar.bottom::before { bottom: 0; height: 120px; background: linear-gradient(rgb(var(--bar-sh) / 0), rgb(var(--bar-sh) / 0.5)); }
+.bar-end { display: flex; gap: 8px; }
+.mono { border: 0; background: none; padding: 6px 0; font: italic 400 19px/1 var(--display); letter-spacing: 0.01em; }
+.mono:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)), .mono :is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font-family: var(--deva); font-style: normal; }
+.pill {
+  min-width: 36px; height: 36px; padding: 0 14px; border-radius: 18px;
+  border: 1px solid rgb(var(--bar) / 0.3); background: rgb(var(--bar-sh) / 0.3);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  font: 500 13px/1 var(--sans); letter-spacing: 0.02em;
+  transition: transform 160ms var(--ease-out), background-color 300ms ease, border-color 300ms ease;
+}
+.pill:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 14.5px/1 var(--deva); }
+.pill.icon { width: 36px; padding: 0; display: grid; place-items: center; }
+.bars { display: flex; align-items: flex-end; gap: 2px; height: 12px; }
+.bars i { width: 2px; height: 4px; border-radius: 1px; background: currentColor; transform-origin: bottom; }
+.bars i:nth-child(2) { height: 9px; } .bars i:nth-child(3) { height: 6px; } .bars i:nth-child(4) { height: 11px; }
+.pill[aria-pressed="true"] .bars i { animation: bar 0.9s ease-in-out infinite alternate; }
+.pill[aria-pressed="true"] .bars i:nth-child(2) { animation-delay: -0.3s; }
+.pill[aria-pressed="true"] .bars i:nth-child(3) { animation-delay: -0.6s; }
+.pill[aria-pressed="true"] .bars i:nth-child(4) { animation-delay: -0.15s; }
+@keyframes bar { from { transform: scaleY(0.35); } to { transform: scaleY(1); } }
+.where { flex: 1 1 0; margin: 0; display: flex; align-items: baseline; gap: 9px; min-width: 0; }
+.where i { min-width: 1.5em; font: italic 400 16px/1 var(--display); color: rgb(var(--bar) / 0.75); }
+.where span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font: 500 11.5px/1.4 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; }
+.where span:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 14.5px/1.4 var(--deva); letter-spacing: 0; text-transform: none; }
+.where span.long:not(:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur))) { letter-spacing: 0.06em; }
+.next { display: inline-flex; align-items: center; gap: 5px; flex: none; border: 0; background: none; padding: 10px 0 10px 12px; font: 500 11.5px/1 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; transition: transform 160ms var(--ease-out); }
+.next span:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 14.5px/1.2 var(--deva); letter-spacing: 0; text-transform: none; }
+.next svg { width: 16px; height: 16px; }
+.next.up svg { transform: rotate(180deg); }
+.next.bob svg { animation: bob 2.4s ease-in-out infinite; }
+@keyframes bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 3px; } }
+.track { position: relative; flex-basis: 100%; height: 1px; margin-top: 6px; background: rgb(var(--bar) / 0.22); }
+.track > i { position: absolute; inset: 0; background: rgb(var(--bar) / 0.92); transform-origin: left; transform: scaleX(0); }
+.track > span i { position: absolute; top: -2px; width: 1px; height: 5px; background: rgb(var(--bar) / 0.5); }
+
+/* Card previews in the catalogue: the opening view only. */
+.video .bar, .video .skip, .video .loading { display: none; }
+.empty .copy { display: grid; place-items: center; }
+.empty-note { position: static !important; visibility: visible !important; opacity: 1 !important; padding: 24px; font: 400 20px/1.5 var(--serif); }
+
+/* ───────── The whole invitation, in a sheet ───────── */
+.sheet {
+  width: var(--stage-w); max-width: 100vw; height: 100svh; max-height: 100svh;
+  margin: 0 auto; padding: 0; border: 0;
+  background: var(--paper) var(--paper-tex); background-size: 520px; color: var(--ink);
+  overflow: hidden;
+}
+.sheet[open] { display: flex; flex-direction: column; animation: sheet-in 420ms var(--ease-out); }
+.sheet::backdrop { background: rgba(10, 7, 5, 0.62); }
+@keyframes sheet-in { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: calc(var(--safe-t) + 10px) 10px 10px 22px; border-bottom: 1px solid var(--rule); }
+.sheet-title { margin: 0; font: italic 400 19px/1.2 var(--display); outline: none; }
+.sheet-title:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 18px/1.4 var(--deva); }
+.close { width: 44px; height: 44px; border: 0; border-radius: 22px; background: none; display: grid; place-items: center; }
+.close svg { width: 22px; height: 22px; }
+.sheet-body { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 22px calc(var(--safe-b) + 40px); }
+.sheet p { margin: 0; text-wrap: pretty; }
+.sec { padding: 32px 0 6px; }
+.sec + .sec { margin-top: 24px; border-top: 1px solid var(--rule); }
+.sec-t { margin: 0 0 14px; font: 400 28px/1.12 var(--display); }
+.sec-t:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 26px/1.4 var(--deva); }
+.sec-lede { margin: -4px 0 14px !important; color: var(--muted); font-size: 16.5px; }
+.sec-lede:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font-size: 15px; line-height: 1.7; }
+
+.inv { text-align: center; }
+.inv .om { margin: 0 0 16px; font: 400 15px/1.4 var(--deva); color: var(--rani); }
+.inv .om:lang(bn) { font-family: "Tiro Bangla", var(--deva); }
+.inv .inv-lede { margin: 0 auto 10px; max-width: 18rem; font: italic 500 17px/1.4 var(--serif); color: var(--muted); }
+.inv .inv-lede:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 15.5px/1.7 var(--deva); }
+.inv .n { margin: 10px 0 2px; font: 400 33px/1.15 var(--display); }
+.inv .n:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 31px/1.45 var(--deva); }
+.inv .s { margin: 2px 0; font: italic 500 16px/1.4 var(--serif); color: var(--muted); }
+.inv .s:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 15px/1.6 var(--deva); }
+.inv .w { margin: 8px 0; font: italic 400 17px/1 var(--serif); color: var(--rani); }
+.inv .w:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 16px/1.4 var(--deva); }
+.inv .when { margin-top: 20px; font: 500 13px/1.7 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; }
+.inv .when:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 15.5px/1.7 var(--deva); letter-spacing: 0; text-transform: none; }
+/* Another function's date with the wedding's (keyDate): its name, then its day, as a printed card gives the lagan. */
+.inv .key-k { margin-top: 14px; }
+.inv .when.key { margin-top: 2px; }
+.note-text { font: italic 500 19px/1.45 var(--serif); }
+.note-text:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 16.5px/1.75 var(--deva); }
+
+.evs { display: grid; }
+.ev { padding: 16px 0; border-top: 1px solid var(--rule); }
+.ev:first-child { padding-top: 0; border-top: 0; }
+.ev h3 { margin: 0; font: 400 24px/1.2 var(--display); }
+.ev h3 small { font: 400 16px/1.4 var(--deva); color: var(--muted); }
+.ev h3:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 22px/1.4 var(--deva); }
+.ev .t { margin-top: 4px; font: 500 16.5px/1.45 var(--serif); color: var(--muted); }
+.ev .t:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 15px/1.7 var(--deva); }
+.ev .d { display: flex; align-items: center; gap: 9px; margin-top: 8px; font: 500 16px/1.4 var(--serif); }
+.ev .d:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 15px/1.65 var(--deva); }
+.ev .d { flex-wrap: wrap; row-gap: 4px; }
+.ev .dk { font: 600 11.5px/1.2 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.ev .dk:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)), .ev .d:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) .dk { font: 400 14px/1.4 var(--deva); letter-spacing: 0; text-transform: none; }
+.sw { display: inline-flex; gap: 3px; flex: none; }
+.sw i { width: 13px; height: 13px; border-radius: 7px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14); }
+.ev-acts { display: flex; align-items: center; gap: 10px; margin-top: 10px !important; }
+.cal { height: 34px; padding: 0 14px; border: 1px solid rgba(42, 26, 20, 0.28); border-radius: 17px; background: none; color: var(--ink); font: 500 13px/1 var(--sans); text-decoration: none; display: inline-grid; place-items: center; }
+.cal:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 14px/1 var(--deva); }
+
+.venue .vn { font: 400 22px/1.3 var(--display); }
+.venue .vn:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 21px/1.45 var(--deva); }
+.venue .va { margin: 4px 0 16px !important; color: var(--muted); font-size: 17px; }
+.venue .va:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font-size: 15.5px; line-height: 1.7; }
+.h3 { margin: 22px 0 6px; font: 500 12px/1.4 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--rani); }
+.h3:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 15px/1.5 var(--deva); letter-spacing: 0; text-transform: none; }
+.venue ul { margin: 0; padding-left: 18px; font-size: 17px; line-height: 1.5; }
+.venue ul:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font-size: 15.5px; line-height: 1.75; }
+.venue li + li { margin-top: 6px; }
+.sheet .btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 48px; padding: 0 24px; border: 0; border-radius: 24px; text-decoration: none;
+  font: 500 15px/1 var(--sans); transition: transform 160ms var(--ease-out);
+}
+.sheet .btn:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 16px/1.2 var(--deva); }
+.sheet .btn:active { transform: scale(0.97); }
+.sheet .btn svg { width: 18px; height: 18px; }
+.sheet .btn.line { background: none; color: var(--ink); box-shadow: inset 0 0 0 1px rgba(42, 26, 20, 0.35); height: 44px; }
+.sheet .btn.solid { width: 100%; background: var(--ink); color: var(--paper); }
+.story { font: 500 18px/1.5 var(--serif); }
+.story:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 16px/1.8 var(--deva); }
+.line { margin: 16px 0 0; padding: 0; list-style: none; }
+.line li { display: grid; grid-template-columns: 7rem 1fr; gap: 10px; padding: 8px 0; border-top: 1px solid var(--rule); font: 500 16.5px/1.4 var(--serif); }
+.line li:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)), .line li :is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font-family: var(--deva); font-size: 15px; }
+.line .lw { color: var(--rani); font-style: italic; }
+.line .lw:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font-style: normal; }
+.photos { display: flex; gap: 10px; margin: 0 -22px; padding: 0 22px 6px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.photos::-webkit-scrollbar { display: none; }
+.photos figure { flex: 0 0 64%; margin: 0; scroll-snap-align: center; }
+.photos img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: 50% 18%; border-radius: 120px 120px 6px 6px; background: #e6dccb; }
+.photos figcaption { margin-top: 8px; font: italic 500 15px/1.35 var(--serif); color: var(--muted); }
+.photos figcaption:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 14px/1.6 var(--deva); }
+.fam + .fam { margin-top: 16px; }
+.caps { font: 500 11.5px/1.5 var(--sans) !important; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rani); }
+.caps:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 14.5px/1.5 var(--deva) !important; letter-spacing: 0; text-transform: none; }
+.fam-n { margin-top: 3px !important; font: 500 17.5px/1.4 var(--serif); }
+.fam-n:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 16px/1.65 var(--deva); }
+/* A line the couple ends with a colon ("Special Invitation:") heads the names under it (engine.css .fam-sub). */
+.fam .fam-sub, .fam .fam-sub:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { margin-top: 14px !important; font-weight: 600; }
+.fam .caps + .fam-sub { margin-top: 3px !important; }
+
+.rsvp label { display: block; margin: 0 0 6px; font: 500 13px/1.4 var(--sans); color: var(--muted); }
+.rsvp label:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)), .rsvp:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) label { font: 400 14.5px/1.5 var(--deva); }
+.rsvp input { width: 100%; height: 48px; padding: 0 14px; border: 1px solid rgba(42, 26, 20, 0.25); border-radius: 10px; background: #fbf6ec; color: var(--ink); font: 400 16px var(--sans); }
+.rows { margin: 18px 0 20px; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 1px solid var(--rule); }
+.row:last-child { border-bottom: 1px solid var(--rule); }
+.row b { display: block; font: 400 19px/1.2 var(--display); }
+.row b:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 17px/1.45 var(--deva); }
+.row small { font: 400 12.5px/1.4 var(--sans); color: var(--muted); }
+.stepper { display: flex; align-items: center; gap: 4px; }
+.step { width: 40px; height: 40px; padding: 0; border: 1px solid rgba(42, 26, 20, 0.24); border-radius: 20px; background: none; color: var(--ink); display: grid; place-items: center; }
+.step svg { width: 18px; height: 18px; }
+.stepper output { min-width: 2.2ch; text-align: center; font: 500 16px var(--sans); }
+.rsvp .note { margin-top: 10px !important; font: 400 12.5px/1.5 var(--sans); color: var(--muted); text-align: center; }
+.rsvp .note:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)), .rsvp:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) .note { font: 400 13.5px/1.65 var(--deva); }
+.rsvp .note.warn { color: var(--rani); }
+.rsvp .need { margin: 6px 0 0 !important; font: 400 13px/1.45 var(--sans); color: var(--rani); }
+.rsvp .need:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)), .rsvp:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) .need { font: 400 14px/1.6 var(--deva); }
+.rsvp input[aria-invalid="true"] { border-color: var(--rani); }
+/* Once the family has replied, the thank-you takes the form's place until they choose to change it. */
+.rsvp.done > :not(.rsvp-done, .note.warn) { display: none; }
+.rsvp:not(.done) > .rsvp-done { display: none; }
+.rsvp-done { text-align: center; }
+.rd-title, .rc-title { margin: 0; font: italic 400 30px/1.2 var(--display); color: var(--rani); }
+:is(.rd-title, .rc-title):is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)), :is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) > :is(.rd-title, .rc-title) { font: 400 26px/1.4 var(--deva); font-style: normal; }
+.rd-line { margin: 6px auto 0 !important; max-width: 30ch; text-wrap: pretty; font: italic 500 18px/1.45 var(--serif); }
+.rd-line:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)), .rsvp:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) .rd-line { font: 400 16px/1.7 var(--deva); font-style: normal; }
+.rd-change, .rc-back { min-height: 44px; margin-top: 8px; padding: 0 16px; border: 0; background: none; color: var(--ink); cursor: pointer; font: 500 15px/1 var(--sans); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+:is(.rd-change, .rc-back):is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)), :is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) > * > :is(.rd-change, .rc-back) { font: 400 16px/1.2 var(--deva); }
+.rc-list { margin: 16px 0 0; padding: 0; list-style: none; text-align: left; }
+.rc-list li { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 10px 0; border-top: 1px solid var(--rule); font: 400 18px/1.25 var(--display); }
+.rc-list li:last-child { border-bottom: 1px solid var(--rule); }
+.rc-list:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) li { font: 400 16.5px/1.45 var(--deva); }
+.rc-list b { font: 500 18px/1 var(--sans); font-variant-numeric: tabular-nums; }
+.rc-list b.no { font: 400 14px/1.3 var(--sans); color: var(--muted); }
+.rc-list:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) b.no { font: 400 14.5px/1.5 var(--deva); }
+/* The check before a reply goes: over the details sheet, in its paper. */
+.rsvp-confirm { width: min(calc(100vw - 32px), 380px); max-height: calc(100svh - 48px); padding: 0; border: 0; border-radius: 18px; overflow: auto; background: var(--paper) var(--paper-tex); background-size: 520px; color: var(--ink); box-shadow: 0 24px 60px rgba(10, 6, 4, 0.45); }
+.rsvp-confirm::backdrop { background: rgba(10, 7, 5, 0.55); }
+.rsvp-confirm[open] { animation: rc-in 220ms var(--ease-out); }
+@keyframes rc-in { from { opacity: 0; transform: translateY(10px) scale(0.97); } }
+.rc-in { padding: 24px 22px 12px; text-align: center; }
+.rc-in p { margin: 0; }
+.rc-from { margin-top: 6px !important; font: 500 11.5px/1.5 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.rsvp-confirm:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) .rc-from { font: 400 14.5px/1.5 var(--deva); letter-spacing: 0; text-transform: none; }
+.rc-note { margin: 14px auto 0 !important; max-width: 32ch; text-wrap: pretty; font: 400 13px/1.5 var(--sans); color: var(--muted); }
+.rsvp-confirm:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) .rc-note { font: 400 14px/1.65 var(--deva); }
+.rc-actions { display: grid; justify-items: center; margin-top: 16px; }
+.rsvp-confirm .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 48px; padding: 0 24px; border: 0; border-radius: 24px; background: var(--ink); color: var(--paper); font: 500 15px/1 var(--sans); transition: transform 160ms var(--ease-out); }
+.rsvp-confirm .btn:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)), .rsvp-confirm:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) .btn { font: 400 16px/1.2 var(--deva); }
+.rsvp-confirm .btn:active { transform: scale(0.97); }
+.rsvp-confirm .btn svg { width: 18px; height: 18px; }
+/* The song: a now-playing card in the walk's own red, like the painted engine's. */
+.song-card { width: min(100%, 300px); margin: 6px auto 0; padding: 16px 16px 14px; border-radius: 18px; color: #fff; background: linear-gradient(170deg, color-mix(in srgb, var(--rani) 80%, #1b0f0c), color-mix(in srgb, var(--rani) 40%, #0d0807)); box-shadow: 0 18px 40px -14px rgba(20, 8, 4, 0.5); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.sc-cover { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: 10px; background: rgba(0, 0, 0, 0.3); }
+.sc-cover img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; display: block; }
+.sc-cover.video { aspect-ratio: 16 / 9; }
+.sc-row { margin-top: 14px; }
+.sc-title { margin: 0; font: 700 19px/1.25 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sc-title:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 600 19px/1.4 var(--deva); }
+.sc-artist { margin: 3px 0 0; font-size: 14.5px; color: rgba(255, 255, 255, 0.84); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sc-bar { position: relative; height: 4px; margin-top: 14px; border-radius: 2px; background: rgba(255, 255, 255, 0.24); }
+.sc-bar i { position: absolute; inset: 0 62% 0 0; border-radius: 2px; background: #fff; }
+.sc-controls { display: flex; justify-content: center; margin-top: 12px; }
+.sc-play { display: grid; place-items: center; width: 56px; height: 56px; padding: 0; border: 0; border-radius: 50%; background: #fff; color: color-mix(in srgb, var(--rani) 50%, #120a08); cursor: pointer; }
+.sc-play svg { width: 26px; height: 26px; margin-left: 3px; }
+.sc-play:active { scale: 0.94; }
+.sc-from { margin: 10px 0 0; text-align: center; font-size: 13px; color: var(--muted); }
+.song-frame { display: block; width: 100%; height: 100%; border: 0; }
+.song-frame.spotify { height: 80px; margin-top: 12px; border-radius: 12px; }
+.contacts { margin: 0; padding: 0; list-style: none; }
+.contacts li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--rule); font-size: 17px; }
+.contacts small { color: var(--muted); }
+.contacts li > span { min-width: 0; overflow-wrap: anywhere; }
+/* The number itself, to tap and call, on one line. */
+.contacts .tel { flex: none; white-space: nowrap; font-size: 14px; font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+.signoff { padding: 40px 0 10px; text-align: center; }
+.signoff .so { font: italic 500 19px/1.45 var(--serif); }
+.signoff .so:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 17px/1.65 var(--deva); }
+.painted { display: inline-block; margin-top: 18px; padding: 6px 0; color: var(--ink); font: 500 14px/1.2 var(--sans); text-underline-offset: 4px; text-decoration-color: rgba(42, 26, 20, 0.35); }
+.painted:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 15px/1.4 var(--deva); }
+/* Shagun: the UPI ID, copied on a tap. */
+.upi-id { display: grid; justify-items: start; text-align: left; gap: 4px; width: min(100%, 300px); margin: 12px 0 0; padding: 14px 20px 12px; border: 1px solid var(--rule); border-radius: 16px; background: rgba(255, 255, 255, 0.45); color: var(--ink); cursor: pointer; font: inherit; }
+.upi-id:active { scale: 0.98; }
+.upi-k { font: 600 11px/1.2 var(--sans); letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+.upi-k:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 14px/1.4 var(--deva); letter-spacing: 0; text-transform: none; }
+.upi-v { font: 500 20px/1.3 var(--serif); overflow-wrap: anywhere; user-select: all; }
+.upi-hint { font: 400 12.5px/1.3 var(--sans); color: var(--muted); }
+.upi-hint:is(:lang(hi), :lang(mr), :lang(bn), :lang(as), :lang(pa), :lang(ur)) { font: 400 13px/1.5 var(--deva); }
+.upi-id.copied { border-color: var(--gold); }
+/* "Invite made with" the Saath mark, at the size of the words, and saath.studio. */
+.made { display: inline-flex; align-items: center; gap: 5px; margin-top: 18px; color: var(--muted); font: 400 12.5px/1.4 var(--sans); text-decoration: none; }
+.made img { width: 1.2em; height: 1.2em; margin-left: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .next.bob svg, .pill[aria-pressed="true"] .bars i { animation: none; }
+  .sheet[open], .rsvp-confirm[open] { animation: none; }
+  .loading i { transition: none; }
+  .wait { animation-duration: 2.4s; }
+}
